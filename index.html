@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinFeed &mdash; Premium Fish Feed for Aquariums &amp; Ponds</title>
+  <style>
+    :root { --deep:#0a3d62; --aqua:#3c99dc; --sand:#f6f4ef; --ink:#12303f; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:var(--ink); background:var(--sand); }
+    header { background:var(--deep); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+    header .brand { font-size:22px; font-weight:700; letter-spacing:.5px; }
+    header nav a { color:#cfe8ff; margin-left:20px; text-decoration:none; font-size:14px; }
+    .hero { background:linear-gradient(120deg,var(--deep),var(--aqua)); color:#fff; padding:60px 24px; text-align:center; }
+    .hero h1 { margin:0 0 10px; font-size:34px; }
+    .hero p { margin:0 auto; max-width:560px; font-size:17px; opacity:.92; }
+    .hero .cta { display:inline-block; margin-top:22px; background:#fff; color:var(--deep); padding:12px 26px; border-radius:30px; font-weight:600; text-decoration:none; }
+    .products { max-width:1000px; margin:40px auto; padding:0 24px; }
+    .products h2 { text-align:center; color:var(--deep); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:20px; margin-top:24px; }
+    .card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 3px 10px rgba(10,61,98,.08); display:flex; flex-direction:column; }
+    .card .thumb { height:120px; background:var(--aqua); display:flex; align-items:center; justify-content:center; font-size:44px; }
+    .card .body { padding:16px; flex:1; display:flex; flex-direction:column; }
+    .card h3 { margin:0 0 6px; font-size:17px; }
+    .card p { margin:0 0 12px; font-size:13px; color:#557; flex:1; }
+    .card .price { font-weight:700; color:var(--deep); font-size:18px; }
+    .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
+    footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">&#128031; FinFeed</div>
+    <nav>
+      <a href="index.html">Shop</a>
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Feed that keeps fish thriving</h1>
+    <p>Nutrient-dense pellets, flakes and sticks for aquariums, koi ponds and fish farms. Vet-formulated, sustainably sourced, shipped fresh.</p>
+    <a class="cta" href="#products">Shop the range</a>
+  </section>
+
+  <section class="products" id="products">
+    <h2>Best sellers</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="thumb">&#127765;</div>
+        <div class="body">
+          <h3>Sinking Pellets 1kg</h3>
+          <p>High-protein bottom-feeder formula for catfish, loaches and cichlids.</p>
+          <span class="price">$14.99</span>
+          <button>Add to cart</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="thumb">&#10052;&#65039;</div>
+        <div class="body">
+          <h3>Tropical Flakes 200g</h3>
+          <p>Everyday floating flakes with color-enhancing spirulina for community tanks.</p>
+          <span class="price">$8.49</span>
+          <button>Add to cart</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="thumb">&#129418;</div>
+        <div class="body">
+          <h3>Koi Growth Sticks 5kg</h3>
+          <p>Wheat-germ pond sticks for steady koi &amp; goldfish growth in cooler water.</p>
+          <span class="price">$39.00</span>
+          <button>Add to cart</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="thumb">&#128032;</div>
+        <div class="body">
+          <h3>Fry Starter 100g</h3>
+          <p>Micro-granule first food for fry and small nano-fish. Rich in essential amino acids.</p>
+          <span class="price">$6.25</span>
+          <button>Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products" id="about">
+    <h2>Why FinFeed</h2>
+    <p style="text-align:center;max-width:640px;margin:12px auto;color:#456;">Family-run since 2016, we mill small batches so your feed reaches the tank fresh. Free shipping on orders over $45, and a live availability badge on every product so you always know what is in stock.</p>
+  </section>
+
+  <footer id="contact">
+    FinFeed Ltd &middot; hello@finfeed.example &middot; 1-800-FINFEED<br>
+    &copy; 2026 FinFeed. All rights reserved.
+  </footer>
+</body>
+</html>
