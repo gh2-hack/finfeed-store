@@ -154,20 +154,22 @@
     };
 
     const loadAvailability = async () => {
-      const response = await fetch(new URL("availability.json", document.baseURI), {
-        cache: "no-store"
-      });
+      try {
+        const response = await fetch(new URL("availability.json", document.baseURI), {
+          cache: "no-store"
+        });
 
-      if (!response.ok) {
-        throw new Error("Unable to load live availability");
+        if (!response.ok) {
+          return {};
+        }
+
+        return response.json().catch(() => ({}));
+      } catch {
+        return {};
       }
-
-      return response.json();
     };
 
-    loadAvailability()
-      .then(applyAvailability)
-      .catch(() => applyAvailability({}));
+    loadAvailability().then(applyAvailability);
   </script>
 </body>
 </html>
