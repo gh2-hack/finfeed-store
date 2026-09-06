@@ -27,6 +27,7 @@
     .availability[data-stock-state="in"] { background:#e3f8ec; color:#166534; }
     .availability[data-stock-state="low"] { background:#fff4d6; color:#92400e; }
     .availability[data-stock-state="out"] { background:#fde8e8; color:#b91c1c; }
+    .availability[data-stock-state="unknown"] { background:#e7eef5; color:#35566a; }
     .card .price { font-weight:700; color:var(--deep); font-size:18px; }
     .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
     footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
@@ -108,7 +109,8 @@
     const STOCK_LABELS = {
       in: "In stock",
       low: "Low",
-      out: "Out"
+      out: "Out",
+      unknown: "Availability unavailable"
     };
 
     const normalizeStockState = (value) => {
@@ -129,17 +131,23 @@
       return null;
     };
 
+    const setBadgeState = (badge, state) => {
+      const finalState = state || "unknown";
+
+      badge.dataset.stockState = finalState;
+      badge.textContent = STOCK_LABELS[finalState];
+    };
+
     const applyAvailability = (inventory) => {
       document.querySelectorAll(".card[data-sku]").forEach((card) => {
         const badge = card.querySelector("[data-availability]");
         const state = normalizeStockState(inventory[card.dataset.sku]);
 
-        if (!badge || !state) {
+        if (!badge) {
           return;
         }
 
-        badge.dataset.stockState = state;
-        badge.textContent = STOCK_LABELS[state];
+        setBadgeState(badge, state);
       });
     };
 
@@ -157,14 +165,7 @@
 
     loadAvailability()
       .then(applyAvailability)
-      .catch(() => {
-        applyAvailability({
-          "FF-SP1": "In stock",
-          "FF-TF2": "Low",
-          "FF-KS5": "Out",
-          "FF-FS1": "In stock"
-        });
-      });
+      .catch(() => applyAvailability({}));
   </script>
 </body>
 </html>
