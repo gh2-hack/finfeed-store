@@ -23,6 +23,11 @@
     .card .body { padding:16px; flex:1; display:flex; flex-direction:column; }
     .card h3 { margin:0 0 6px; font-size:17px; }
     .card p { margin:0 0 12px; font-size:13px; color:#557; flex:1; }
+    .availability { display:inline-flex; align-items:center; align-self:flex-start; margin:0 0 12px; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.02em; }
+    .availability[data-stock-state="in"] { background:#e3f8ec; color:#166534; }
+    .availability[data-stock-state="low"] { background:#fff4d6; color:#92400e; }
+    .availability[data-stock-state="out"] { background:#fde8e8; color:#b91c1c; }
+    .availability[data-stock-state="unknown"] { background:#e7eef5; color:#35566a; }
     .card .price { font-weight:700; color:var(--deep); font-size:18px; }
     .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
     footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
@@ -48,38 +53,42 @@
   <section class="products" id="products">
     <h2>Best sellers</h2>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-sku="FF-SP1">
         <div class="thumb">&#127765;</div>
         <div class="body">
           <h3>Sinking Pellets 1kg</h3>
           <p>High-protein bottom-feeder formula for catfish, loaches and cichlids.</p>
+          <span class="availability" data-availability role="status" aria-live="polite">Checking availability...</span>
           <span class="price">$14.99</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-TF2">
         <div class="thumb">&#10052;&#65039;</div>
         <div class="body">
           <h3>Tropical Flakes 200g</h3>
           <p>Everyday floating flakes with color-enhancing spirulina for community tanks.</p>
+          <span class="availability" data-availability role="status" aria-live="polite">Checking availability...</span>
           <span class="price">$8.49</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-KS5">
         <div class="thumb">&#129418;</div>
         <div class="body">
           <h3>Koi Growth Sticks 5kg</h3>
           <p>Wheat-germ pond sticks for steady koi &amp; goldfish growth in cooler water.</p>
+          <span class="availability" data-availability role="status" aria-live="polite">Checking availability...</span>
           <span class="price">$39.00</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-FS1">
         <div class="thumb">&#128032;</div>
         <div class="body">
           <h3>Fry Starter 100g</h3>
           <p>Micro-granule first food for fry and small nano-fish. Rich in essential amino acids.</p>
+          <span class="availability" data-availability role="status" aria-live="polite">Checking availability...</span>
           <span class="price">$6.25</span>
           <button>Add to cart</button>
         </div>
@@ -96,5 +105,75 @@
     FinFeed Ltd &middot; hello@finfeed.example &middot; 1-800-FINFEED<br>
     &copy; 2026 FinFeed. All rights reserved.
   </footer>
+  <script>
+    const STOCK_LABELS = {
+      in: "In stock",
+      low: "Low",
+      out: "Out",
+      unknown: "Availability unavailable"
+    };
+
+    const normalizeStockState = (value) => {
+      const normalized = String(value || "").trim().toLowerCase();
+
+      if (normalized === "in" || normalized === "in stock" || normalized === "instock") {
+        return "in";
+      }
+
+      if (normalized === "low" || normalized === "low stock") {
+        return "low";
+      }
+
+      if (normalized === "out" || normalized === "out of stock" || normalized === "oos") {
+        return "out";
+      }
+
+      return null;
+    };
+
+    const setBadgeState = (badge, state) => {
+      const finalState = state || "unknown";
+
+      badge.dataset.stockState = finalState;
+      badge.textContent = STOCK_LABELS[finalState];
+    };
+
+    const applyAvailability = (inventory) => {
+      const safeInventory = inventory && typeof inventory === "object" ? inventory : {};
+
+      document.querySelectorAll(".card[data-sku]").forEach((card) => {
+        const badge = card.querySelector("[data-availability]");
+
+        if (!badge) {
+          return;
+        }
+
+        const state = normalizeStockState(safeInventory[card.dataset.sku]);
+        setBadgeState(badge, state);
+      });
+    };
+
+    const loadAvailability = async () => {
+      try {
+        const availabilityUrl = new URL(
+          `${window.location.pathname.replace(/[^/]*$/, "")}availability.json`,
+          window.location.origin
+        );
+        const response = await fetch(availabilityUrl, {
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          return {};
+        }
+
+        return response.json().catch(() => ({}));
+      } catch {
+        return {};
+      }
+    };
+
+    loadAvailability().then(applyAvailability);
+  </script>
 </body>
 </html>
