@@ -155,7 +155,11 @@
 
     const loadAvailability = async () => {
       try {
-        const response = await fetch(new URL("/availability.json", window.location.href), {
+        const availabilityUrl = new URL(
+          `${window.location.pathname.replace(/[^/]*$/, "")}availability.json`,
+          window.location.origin
+        );
+        const response = await fetch(availabilityUrl, {
           cache: "no-store"
         });
 
