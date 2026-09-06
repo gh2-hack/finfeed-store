@@ -143,12 +143,12 @@
 
       document.querySelectorAll(".card[data-sku]").forEach((card) => {
         const badge = card.querySelector("[data-availability]");
-        const state = normalizeStockState(safeInventory[card.dataset.sku]);
 
         if (!badge) {
           return;
         }
 
+        const state = normalizeStockState(safeInventory[card.dataset.sku]);
         setBadgeState(badge, state);
       });
     };
