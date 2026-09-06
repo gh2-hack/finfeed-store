@@ -154,7 +154,7 @@
     };
 
     const loadAvailability = async () => {
-      const response = await fetch(`./availability.json?ts=${Date.now()}`, {
+      const response = await fetch("./availability.json", {
         cache: "no-store"
       });
 
