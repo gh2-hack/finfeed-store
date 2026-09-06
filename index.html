@@ -24,6 +24,9 @@
     .card h3 { margin:0 0 6px; font-size:17px; }
     .card p { margin:0 0 12px; font-size:13px; color:#557; flex:1; }
     .card .price { font-weight:700; color:var(--deep); font-size:18px; }
+    .card .availability { display:inline-block; margin-top:8px; color:#557; font-size:13px; }
+    .card .availability[data-state="in-stock"] { color:#18794e; }
+    .card .availability[data-state="out-of-stock"] { color:#b42318; }
     .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
     footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
   </style>
@@ -48,39 +51,43 @@
   <section class="products" id="products">
     <h2>Best sellers</h2>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-sku="FF-SP1">
         <div class="thumb">&#127765;</div>
         <div class="body">
           <h3>Sinking Pellets 1kg</h3>
           <p>High-protein bottom-feeder formula for catfish, loaches and cichlids.</p>
           <span class="price">$14.99</span>
+          <span class="availability" aria-live="polite">Checking availability&hellip;</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-TF2">
         <div class="thumb">&#10052;&#65039;</div>
         <div class="body">
           <h3>Tropical Flakes 200g</h3>
           <p>Everyday floating flakes with color-enhancing spirulina for community tanks.</p>
           <span class="price">$8.49</span>
+          <span class="availability" aria-live="polite">Checking availability&hellip;</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-KS5">
         <div class="thumb">&#129418;</div>
         <div class="body">
           <h3>Koi Growth Sticks 5kg</h3>
           <p>Wheat-germ pond sticks for steady koi &amp; goldfish growth in cooler water.</p>
           <span class="price">$39.00</span>
+          <span class="availability" aria-live="polite">Checking availability&hellip;</span>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-FS1">
         <div class="thumb">&#128032;</div>
         <div class="body">
           <h3>Fry Starter 100g</h3>
           <p>Micro-granule first food for fry and small nano-fish. Rich in essential amino acids.</p>
           <span class="price">$6.25</span>
+          <span class="availability" aria-live="polite">Checking availability&hellip;</span>
           <button>Add to cart</button>
         </div>
       </div>
@@ -96,5 +103,35 @@
     FinFeed Ltd &middot; hello@finfeed.example &middot; 1-800-FINFEED<br>
     &copy; 2026 FinFeed. All rights reserved.
   </footer>
+  <script>
+    const inventoryCards = document.querySelectorAll('[data-sku]');
+
+    function setAvailability(card, available) {
+      const badge = card.querySelector('.availability');
+      const inStock = available === true || available === 'in-stock';
+      badge.dataset.state = inStock ? 'in-stock' : 'out-of-stock';
+      badge.textContent = inStock ? 'In stock' : 'Out of stock';
+    }
+
+    fetch(`availability.json?${Date.now()}`, { cache: 'no-store' })
+      .then(response => {
+        if (!response.ok) throw new Error('Inventory request failed');
+        return response.json();
+      })
+      .then(inventory => {
+        if (!inventory || typeof inventory !== 'object' ||
+            [...inventoryCards].some(card => !(card.dataset.sku in inventory))) {
+          throw new Error('Invalid inventory manifest');
+        }
+        inventoryCards.forEach(card => setAvailability(card, inventory[card.dataset.sku]));
+      })
+      .catch(() => {
+        inventoryCards.forEach(card => {
+          const badge = card.querySelector('.availability');
+          badge.dataset.state = 'unknown';
+          badge.textContent = 'Availability unavailable';
+        });
+      });
+  </script>
 </body>
 </html>
