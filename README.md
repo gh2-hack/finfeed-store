@@ -17,7 +17,10 @@ A small customer-facing storefront for **FinFeed**, a family-run seller of premi
 
 ## Running locally
 
-Just open `index.html` in a browser &mdash; it is a static page with no build step.
+Serve the directory over HTTP (for example, `python3 -m http.server`) and open
+`index.html` in a browser. The product badges load the current inventory from
+`availability.json` with caching disabled, so deployments can replace that
+manifest without leaving clients on the previous values.
 
 ## Roadmap
 
