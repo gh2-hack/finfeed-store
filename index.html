@@ -139,9 +139,11 @@
     };
 
     const applyAvailability = (inventory) => {
+      const safeInventory = inventory && typeof inventory === "object" ? inventory : {};
+
       document.querySelectorAll(".card[data-sku]").forEach((card) => {
         const badge = card.querySelector("[data-availability]");
-        const state = normalizeStockState(inventory[card.dataset.sku]);
+        const state = normalizeStockState(safeInventory[card.dataset.sku]);
 
         if (!badge) {
           return;
