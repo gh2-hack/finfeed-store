@@ -154,7 +154,7 @@
     };
 
     const loadAvailability = async () => {
-      const response = await fetch("./availability.json", {
+      const response = await fetch(new URL("availability.json", document.baseURI), {
         cache: "no-store"
       });
 
