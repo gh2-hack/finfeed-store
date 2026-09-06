@@ -5,6 +5,7 @@ A small customer-facing storefront for **FinFeed**, a family-run seller of premi
 ## What's here
 
 - `index.html` &mdash; the single-page storefront (hero, best-seller grid, about, contact).
+- `availability.json` &mdash; runtime product availability data used by the live stock badges.
 
 ## Product range
 
@@ -17,11 +18,16 @@ A small customer-facing storefront for **FinFeed**, a family-run seller of premi
 
 ## Running locally
 
-Just open `index.html` in a browser &mdash; it is a static page with no build step.
+Serve the repository root with a simple static server so the live availability badge can fetch `availability.json`, for example:
+
+```bash
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000/index.html`.
 
 ## Roadmap
 
-- Live per-product availability badge
 - Cart + checkout
 - Subscription auto-refill
 
