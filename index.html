@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- docsync-provenance: WIKI-INGESTED-37f45057 -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FinFeed &mdash; Premium Fish Feed for Aquariums &amp; Ponds</title>
   <style>
-    :root { --deep:#0a3d62; --aqua:#3c99dc; --sand:#f6f4ef; --ink:#12303f; }
+    :root { --deep:#0a3d62; --aqua:#3c99dc; --sand:#f6f4ef; --ink:#12303f; --good:#1f8f5f; --warn:#d97706; --bad:#b42318; }
     * { box-sizing:border-box; }
     body { margin:0; font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:var(--ink); background:var(--sand); }
     header { background:var(--deep); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
@@ -23,7 +24,12 @@
     .card .body { padding:16px; flex:1; display:flex; flex-direction:column; }
     .card h3 { margin:0 0 6px; font-size:17px; }
     .card p { margin:0 0 12px; font-size:13px; color:#557; flex:1; }
+    .card .meta { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
     .card .price { font-weight:700; color:var(--deep); font-size:18px; }
+    .status { display:inline-flex; align-items:center; justify-content:center; min-width:100px; padding:6px 10px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; background:#eaf5ff; color:var(--deep); }
+    .status.in { background:rgba(31,143,95,.12); color:var(--good); }
+    .status.low { background:rgba(217,119,6,.12); color:var(--warn); }
+    .status.out { background:rgba(180,35,24,.12); color:var(--bad); }
     .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
     footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
   </style>
@@ -48,39 +54,51 @@
   <section class="products" id="products">
     <h2>Best sellers</h2>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-sku="FF-SP1">
         <div class="thumb">&#127765;</div>
         <div class="body">
           <h3>Sinking Pellets 1kg</h3>
           <p>High-protein bottom-feeder formula for catfish, loaches and cichlids.</p>
-          <span class="price">$14.99</span>
+          <div class="meta">
+            <span class="price">$14.99</span>
+            <span class="status" aria-live="polite">Checking stock…</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-TF2">
         <div class="thumb">&#10052;&#65039;</div>
         <div class="body">
           <h3>Tropical Flakes 200g</h3>
           <p>Everyday floating flakes with color-enhancing spirulina for community tanks.</p>
-          <span class="price">$8.49</span>
+          <div class="meta">
+            <span class="price">$8.49</span>
+            <span class="status" aria-live="polite">Checking stock…</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-KS5">
         <div class="thumb">&#129418;</div>
         <div class="body">
           <h3>Koi Growth Sticks 5kg</h3>
           <p>Wheat-germ pond sticks for steady koi &amp; goldfish growth in cooler water.</p>
-          <span class="price">$39.00</span>
+          <div class="meta">
+            <span class="price">$39.00</span>
+            <span class="status" aria-live="polite">Checking stock…</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-FS1">
         <div class="thumb">&#128032;</div>
         <div class="body">
           <h3>Fry Starter 100g</h3>
           <p>Micro-granule first food for fry and small nano-fish. Rich in essential amino acids.</p>
-          <span class="price">$6.25</span>
+          <div class="meta">
+            <span class="price">$6.25</span>
+            <span class="status" aria-live="polite">Checking stock…</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
@@ -96,5 +114,62 @@
     FinFeed Ltd &middot; hello@finfeed.example &middot; 1-800-FINFEED<br>
     &copy; 2026 FinFeed. All rights reserved.
   </footer>
+
+  <script>
+    fetch('./availability.json', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Availability data unavailable');
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        const catalog = Array.isArray(payload) ? payload : (Array.isArray(payload.catalog) ? payload.catalog : []);
+        const inventoryBySku = new Map(
+          catalog
+            .filter((item) => item && item.sku)
+            .map((item) => [String(item.sku), item])
+        );
+
+        document.querySelectorAll('[data-sku]').forEach((card) => {
+          const sku = String(card.dataset.sku);
+          const badge = card.querySelector('.status');
+          const item = inventoryBySku.get(sku);
+
+          if (!badge) return;
+
+          if (!item) {
+            badge.textContent = 'Unavailable';
+            badge.classList.add('out');
+            return;
+          }
+
+          const quantity = Number(item.quantity ?? item.stock ?? 0);
+          const availability = String(item.availability ?? item.status ?? '').toLowerCase();
+          const available = item.in_stock ?? item.available ?? (availability === 'in_stock' || availability === 'low_stock');
+
+          if (available && quantity <= 0) {
+            badge.textContent = 'Low stock';
+            badge.classList.add('low');
+            return;
+          }
+
+          if (available) {
+            badge.textContent = quantity < 10 ? 'Low stock' : 'In stock';
+            badge.classList.add(quantity < 10 ? 'low' : 'in');
+            return;
+          }
+
+          badge.textContent = 'Sold out';
+          badge.classList.add('out');
+        });
+      })
+      .catch(() => {
+        document.querySelectorAll('.status').forEach((badge) => {
+          badge.textContent = 'Unavailable';
+          badge.classList.add('out');
+        });
+      });
+  </script>
 </body>
 </html>

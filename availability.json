@@ -1,0 +1,40 @@
+{
+  "catalog": [
+    {
+      "sku": "FF-SP1",
+      "name": "Sinking Pellets 1kg",
+      "price": 14.99,
+      "availability": "in_stock",
+      "in_stock": true,
+      "quantity": 42,
+      "status": "in_stock"
+    },
+    {
+      "sku": "FF-TF2",
+      "name": "Tropical Flakes 200g",
+      "price": 8.49,
+      "availability": "in_stock",
+      "in_stock": true,
+      "quantity": 18,
+      "status": "in_stock"
+    },
+    {
+      "sku": "FF-KS5",
+      "name": "Koi Growth Sticks 5kg",
+      "price": 39.0,
+      "availability": "low_stock",
+      "in_stock": true,
+      "quantity": 7,
+      "status": "low_stock"
+    },
+    {
+      "sku": "FF-FS1",
+      "name": "Fry Starter 100g",
+      "price": 6.25,
+      "availability": "in_stock",
+      "in_stock": true,
+      "quantity": 14,
+      "status": "in_stock"
+    }
+  ]
+}
