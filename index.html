@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FinFeed &mdash; Premium Fish Feed for Aquariums &amp; Ponds</title>
+  <!-- docsync-provenance: WIKI-INGESTED-37f45057 -->
   <style>
-    :root { --deep:#0a3d62; --aqua:#3c99dc; --sand:#f6f4ef; --ink:#12303f; }
+    :root { --deep:#0a3d62; --aqua:#3c99dc; --sand:#f6f4ef; --ink:#12303f; --good:#1b8f5a; --warn:#b86a00; --bad:#a4332e; }
     * { box-sizing:border-box; }
     body { margin:0; font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:var(--ink); background:var(--sand); }
     header { background:var(--deep); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
@@ -23,7 +24,12 @@
     .card .body { padding:16px; flex:1; display:flex; flex-direction:column; }
     .card h3 { margin:0 0 6px; font-size:17px; }
     .card p { margin:0 0 12px; font-size:13px; color:#557; flex:1; }
+    .meta { display:flex; justify-content:space-between; align-items:center; gap:8px; }
     .card .price { font-weight:700; color:var(--deep); font-size:18px; }
+    .badge { display:inline-flex; align-items:center; justify-content:center; min-width:84px; padding:6px 8px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; background:#edf4fb; color:var(--deep); }
+    .badge[data-state="in_stock"] { background:rgba(27,143,90,.12); color:var(--good); }
+    .badge[data-state="low_stock"] { background:rgba(184,106,0,.12); color:var(--warn); }
+    .badge[data-state="out_of_stock"] { background:rgba(164,51,46,.12); color:var(--bad); }
     .card button { margin-top:12px; background:var(--deep); color:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; font-size:14px; }
     footer { background:var(--ink); color:#bcd; text-align:center; padding:28px 24px; font-size:13px; margin-top:40px; }
   </style>
@@ -38,63 +44,150 @@
       <a href="#contact">Contact</a>
     </nav>
   </header>
-
+ 
   <section class="hero">
     <h1>Feed that keeps fish thriving</h1>
     <p>Nutrient-dense pellets, flakes and sticks for aquariums, koi ponds and fish farms. Vet-formulated, sustainably sourced, shipped fresh.</p>
     <a class="cta" href="#products">Shop the range</a>
   </section>
-
+ 
   <section class="products" id="products">
     <h2>Best sellers</h2>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-sku="FF-SP1">
         <div class="thumb">&#127765;</div>
         <div class="body">
           <h3>Sinking Pellets 1kg</h3>
           <p>High-protein bottom-feeder formula for catfish, loaches and cichlids.</p>
-          <span class="price">$14.99</span>
+          <div class="meta">
+            <span class="price">$14.99</span>
+            <span class="badge" data-state="loading">Checking</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-TF2">
         <div class="thumb">&#10052;&#65039;</div>
         <div class="body">
           <h3>Tropical Flakes 200g</h3>
           <p>Everyday floating flakes with color-enhancing spirulina for community tanks.</p>
-          <span class="price">$8.49</span>
+          <div class="meta">
+            <span class="price">$8.49</span>
+            <span class="badge" data-state="loading">Checking</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-KS5">
         <div class="thumb">&#129418;</div>
         <div class="body">
           <h3>Koi Growth Sticks 5kg</h3>
           <p>Wheat-germ pond sticks for steady koi &amp; goldfish growth in cooler water.</p>
-          <span class="price">$39.00</span>
+          <div class="meta">
+            <span class="price">$39.00</span>
+            <span class="badge" data-state="loading">Checking</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-sku="FF-FS1">
         <div class="thumb">&#128032;</div>
         <div class="body">
           <h3>Fry Starter 100g</h3>
           <p>Micro-granule first food for fry and small nano-fish. Rich in essential amino acids.</p>
-          <span class="price">$6.25</span>
+          <div class="meta">
+            <span class="price">$6.25</span>
+            <span class="badge" data-state="loading">Checking</span>
+          </div>
           <button>Add to cart</button>
         </div>
       </div>
     </div>
   </section>
-
+ 
   <section class="products" id="about">
     <h2>Why FinFeed</h2>
     <p style="text-align:center;max-width:640px;margin:12px auto;color:#456;">Family-run since 2016, we mill small batches so your feed reaches the tank fresh. Free shipping on orders over $45, and a live availability badge on every product so you always know what is in stock.</p>
   </section>
-
+ 
   <footer id="contact">
     FinFeed Ltd &middot; hello@finfeed.example &middot; 1-800-FINFEED<br>
     &copy; 2026 FinFeed. All rights reserved.
   </footer>
+
+  <script>
+    (function () {
+      const cards = document.querySelectorAll('.card[data-sku]');
+      const lookupStatus = (value) => {
+        if (typeof value === 'string') {
+          const normalized = value.toLowerCase();
+          if (normalized.includes('out')) return 'out_of_stock';
+          if (normalized.includes('low')) return 'low_stock';
+          if (normalized.includes('in') || normalized.includes('avail')) return 'in_stock';
+          return normalized;
+        }
+        return value;
+      };
+
+      const statusLabels = {
+        in_stock: 'In stock',
+        low_stock: 'Low stock',
+        out_of_stock: 'Out of stock',
+        loading: 'Checking'
+      };
+
+      fetch('availability.json', { cache: 'no-store' })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const entries = Array.isArray(data)
+            ? data
+            : Array.isArray(data.products)
+              ? data.products
+              : Array.isArray(data.items)
+                ? data.items
+                : Array.isArray(data.inventory)
+                  ? data.inventory
+                  : Object.values(data || {});
+
+          const bySku = new Map();
+          entries.forEach((item) => {
+            const sku = item && (item.sku || item.id || item.product_sku || item.code);
+            if (sku) bySku.set(String(sku).toUpperCase(), item);
+          });
+
+          cards.forEach((card) => {
+            const badge = card.querySelector('.badge');
+            const sku = card.dataset.sku.toUpperCase();
+            const item = bySku.get(sku) || bySku.get(sku.replace(/^FF-/, ''));
+            const availability = item ? (item.available ?? item.in_stock ?? item.stock_status ?? item.status ?? item.availability) : null;
+            let state = 'out_of_stock';
+            if (availability === true || availability === 'true' || availability === 'in_stock' || availability === 'available') {
+              state = 'in_stock';
+            } else if (availability === 'low_stock' || availability === 'limited' || (typeof availability === 'number' && availability > 0 && availability < 10)) {
+              state = 'low_stock';
+            }
+
+            if (item && item.quantity !== undefined && item.quantity === 0) {
+              state = 'out_of_stock';
+            }
+
+            badge.textContent = statusLabels[state] || 'Unknown';
+            badge.dataset.state = state;
+          });
+        })
+        .catch(() => {
+          cards.forEach((card) => {
+            const badge = card.querySelector('.badge');
+            badge.textContent = 'Unavailable';
+            badge.dataset.state = 'out_of_stock';
+          });
+        });
+    })();
+  </script>
 </body>
 </html>

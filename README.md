@@ -17,7 +17,13 @@ A small customer-facing storefront for **FinFeed**, a family-run seller of premi
 
 ## Running locally
 
-Just open `index.html` in a browser &mdash; it is a static page with no build step.
+Serve the storefront over a local HTTP server so the badge script can fetch `availability.json` from the same origin:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000` in a browser.
 
 ## Roadmap
 
