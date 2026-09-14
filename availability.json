@@ -1,0 +1,30 @@
+[
+  {
+    "sku": "FF-SP1",
+    "status": "in_stock",
+    "available": true,
+    "stock": 18,
+    "updated_at": "2026-09-14T00:00:00Z"
+  },
+  {
+    "sku": "FF-TF2",
+    "status": "low_stock",
+    "available": true,
+    "stock": 4,
+    "updated_at": "2026-09-14T00:00:00Z"
+  },
+  {
+    "sku": "FF-KS5",
+    "status": "in_stock",
+    "available": true,
+    "stock": 9,
+    "updated_at": "2026-09-14T00:00:00Z"
+  },
+  {
+    "sku": "FF-FS1",
+    "status": "out_of_stock",
+    "available": false,
+    "stock": 0,
+    "updated_at": "2026-09-14T00:00:00Z"
+  }
+]
