@@ -27,3 +27,4 @@ Just open `index.html` in a browser &mdash; it is a static page with no build st
 
 ---
 &copy; 2026 FinFeed Ltd. Free shipping on orders over $45.
+
